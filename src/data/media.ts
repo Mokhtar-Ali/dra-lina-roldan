@@ -14,7 +14,6 @@ export const media = {
     "https://pixel-p1.s3.sa-east-1.amazonaws.com/doctor/photos/064ad9fc/064ad9fc-e7e6-49f1-9508-0ee04045011b_large.jpg",
   ],
   testimonialVideo: {
-    embedUrl: "https://www.youtube.com/embed/SJ6rPALI_lc",
-    poster: "https://img.youtube.com/vi/SJ6rPALI_lc/hqdefault.jpg",
+    src: "https://pub-ec6b76c0eef842d1bd7d65492c044988.r2.dev/Dr%20Lina/Home%20Page/Testemonial.mp4",
   },
 } as const;

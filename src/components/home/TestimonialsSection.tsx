@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { RevealBlock } from "@/components/shared/RevealBlock";
 import { RevealText } from "@/components/shared/RevealText";
 import { media } from "@/data/media";
@@ -17,23 +16,37 @@ function nextIndex(current: number, direction: 1 | -1) {
 
 export function TestimonialsSection() {
   const { t } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const testimonial = testimonials[activeTestimonial];
-  const videoSrc = `${media.testimonialVideo.embedUrl}?autoplay=1&mute=${
-    isMuted ? "1" : "0"
-  }&controls=1&rel=0&modestbranding=1`;
+  const videoSrc = media.testimonialVideo.src;
 
   const playVideo = () => {
     setHasError(false);
     setIsLoading(true);
-    setIsPlaying(true);
+
+    const playPromise = videoRef.current?.play();
+
+    if (!playPromise) {
+      setIsPlaying(true);
+      return;
+    }
+
+    playPromise
+      .then(() => setIsPlaying(true))
+      .catch(() => {
+        setHasError(true);
+        setIsLoading(false);
+        setIsPlaying(false);
+      });
   };
 
   const pauseVideo = () => {
+    videoRef.current?.pause();
     setIsPlaying(false);
     setIsLoading(false);
   };
@@ -65,37 +78,31 @@ export function TestimonialsSection() {
 
         <RevealBlock className="testimonial-video-card" delay={220}>
           <div className="video-frame">
-            {!isPlaying && (
-              <>
-                <Image
-                  alt={t({
-                    en: "Video preview from Dra. Lina Roldán public media",
-                    es: "Vista previa de video del contenido público de la Dra. Lina Roldán",
-                  })}
-                  fill
-                  sizes="(max-width: 900px) 90vw, 44vw"
-                  src={media.testimonialVideo.poster}
-                />
-                <button className="play-button" onClick={playVideo} type="button">
-                  <span>{t({ en: "Play", es: "Reproducir" })}</span>
-                </button>
-              </>
-            )}
-            {isPlaying && (
-              <iframe
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                onError={() => {
-                  setHasError(true);
-                  setIsLoading(false);
-                }}
-                onLoad={() => setIsLoading(false)}
-                src={videoSrc}
-                title={t({
-                  en: "Dra. Lina Roldán video",
-                  es: "Video de la Dra. Lina Roldán",
-                })}
-              />
+            <video
+              muted={isMuted}
+              onEnded={() => {
+                setIsPlaying(false);
+                setIsLoading(false);
+              }}
+              onError={() => {
+                setHasError(true);
+                setIsLoading(false);
+              }}
+              onLoadedData={() => setIsLoading(false)}
+              onPlaying={() => setIsLoading(false)}
+              playsInline
+              preload="metadata"
+              ref={videoRef}
+              src={videoSrc}
+              title={t({
+                en: "Dra. Lina Roldán video",
+                es: "Video de la Dra. Lina Roldán",
+              })}
+            />
+            {!isPlaying && !hasError && (
+              <button className="play-button" onClick={playVideo} type="button">
+                <span>{t({ en: "Play", es: "Reproducir" })}</span>
+              </button>
             )}
             {isLoading && (
               <div className="video-state">

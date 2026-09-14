@@ -34,7 +34,11 @@ export function HeroSection() {
               es: "Ciencia. Arte. Compasión.",
             })}
           </RevealBlock>
-          <RevealText as="h1" className="hero-title" lines={titleLines} />
+          <RevealText
+            as="h1"
+            className={`hero-title hero-title-${language}`}
+            lines={titleLines}
+          />
           <RevealBlock as="p" className="hero-subtitle" delay={380}>
             {t({
               en: "Modern dental care in Colombia, shaped by scientific rigor, aesthetic sensitivity, and a whole-person approach.",
