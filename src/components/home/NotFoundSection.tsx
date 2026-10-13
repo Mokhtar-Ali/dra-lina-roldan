@@ -12,7 +12,7 @@ export function NotFoundSection() {
   return (
     <section className="hero-section not-found-section">
       <div className="hero-background" aria-hidden="true">
-        <Image alt="" fill sizes="100vw" src={media.heroBackdrop} />
+        <Image alt="" fill loading="eager" sizes="100vw" src={media.heroBackdrop} />
       </div>
 
       <div className="section-shell not-found-inner">

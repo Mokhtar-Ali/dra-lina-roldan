@@ -65,7 +65,7 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section className="testimonials-section section-pad">
+    <section className="testimonials-section section-pad" id="reviews">
       <div className="section-shell testimonial-grid">
         <div>
           <RevealBlock as="p" className="section-eyebrow">
