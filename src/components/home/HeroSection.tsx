@@ -55,9 +55,6 @@ export function HeroSection() {
             <Link className="button primary" href="#contact">
               {t({ en: "Book consultation", es: "Agendar consulta" })}
             </Link>
-            <Link className="button secondary" href="#international">
-              {t({ en: "International patients", es: "Pacientes internacionales" })}
-            </Link>
           </RevealBlock>
         </div>
 

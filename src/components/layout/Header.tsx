@@ -10,10 +10,6 @@ const navItems: NavItem[] = [
   { href: "/", label: { en: "Home", es: "Inicio" } },
   { href: "#about", label: { en: "About", es: "Perfil" } },
   { href: "#services", label: { en: "Services", es: "Servicios" } },
-  {
-    href: "#international",
-    label: { en: "International Patients", es: "Pacientes internacionales" },
-  },
   { href: "#journal", label: { en: "Journal", es: "Journal" } },
   { href: "#contact", label: { en: "Contact", es: "Contacto" } },
 ];

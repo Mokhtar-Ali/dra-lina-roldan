@@ -12,7 +12,6 @@ const treatmentLinks = [
 ];
 
 const patientLinks = [
-  { en: "International patients", es: "Pacientes internacionales" },
   { en: "Virtual orientation", es: "Orientación virtual" },
   { en: "Medellín", es: "Medellín" },
   { en: "Entrerríos", es: "Entrerríos" },
@@ -65,7 +64,7 @@ export function Footer() {
           <div>
             <h3>{t({ en: "Patients", es: "Pacientes" })}</h3>
             {patientLinks.map((item) => (
-              <Link href="#international" key={item.en}>
+              <Link href="#contact" key={item.en}>
                 {t(item)}
               </Link>
             ))}
