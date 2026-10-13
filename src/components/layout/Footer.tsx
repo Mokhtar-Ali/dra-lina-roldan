@@ -18,10 +18,10 @@ const patientLinks = [
 ];
 
 const exploreLinks = [
-  { href: "#about", label: { en: "About", es: "Perfil" } },
-  { href: "#services", label: { en: "Services", es: "Servicios" } },
-  { href: "#journal", label: { en: "Journal", es: "Journal" } },
-  { href: "#faq", label: { en: "FAQ", es: "Preguntas" } },
+  { href: "/#about", label: { en: "About", es: "Perfil" } },
+  { href: "/#services", label: { en: "Services", es: "Servicios" } },
+  { href: "/#journal", label: { en: "Journal", es: "Journal" } },
+  { href: "/#faq", label: { en: "FAQ", es: "Preguntas" } },
 ];
 
 export function Footer() {
@@ -56,7 +56,7 @@ export function Footer() {
           <div>
             <h3>{t({ en: "Treatments", es: "Tratamientos" })}</h3>
             {treatmentLinks.map((item) => (
-              <Link href="#services" key={item.en}>
+              <Link href="/#services" key={item.en}>
                 {t(item)}
               </Link>
             ))}
@@ -64,7 +64,7 @@ export function Footer() {
           <div>
             <h3>{t({ en: "Patients", es: "Pacientes" })}</h3>
             {patientLinks.map((item) => (
-              <Link href="#contact" key={item.en}>
+              <Link href="/#contact" key={item.en}>
                 {t(item)}
               </Link>
             ))}
