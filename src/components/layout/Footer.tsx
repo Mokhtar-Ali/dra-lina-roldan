@@ -32,7 +32,7 @@ export function Footer() {
       : "https://cleopatrasolutions.com/es";
 
   return (
-    <footer className="site-footer" id="contact">
+    <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-brand">
           <p className="eyebrow">
@@ -64,9 +64,7 @@ export function Footer() {
           <div>
             <h3>{t({ en: "Patients", es: "Pacientes" })}</h3>
             {patientLinks.map((item) => (
-              <Link href="/#contact" key={item.en}>
-                {t(item)}
-              </Link>
+              <span key={item.en}>{t(item)}</span>
             ))}
           </div>
           <div>

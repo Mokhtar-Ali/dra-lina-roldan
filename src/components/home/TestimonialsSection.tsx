@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RevealBlock } from "@/components/shared/RevealBlock";
 import { RevealText } from "@/components/shared/RevealText";
+import { bookingUrl } from "@/data/links";
 import { media } from "@/data/media";
 import { testimonials } from "@/data/testimonials";
 import { useLanguage } from "@/providers/LanguageProvider";
@@ -17,7 +18,6 @@ function nextIndex(current: number, direction: 1 | -1) {
 export function TestimonialsSection() {
   const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -25,30 +25,43 @@ export function TestimonialsSection() {
   const testimonial = testimonials[activeTestimonial];
   const videoSrc = media.testimonialVideo.src;
 
-  const playVideo = () => {
-    setHasError(false);
-    setIsLoading(true);
+  // Autoplay (muted) when the video scrolls into view, pause when it leaves.
+  useEffect(() => {
+    const video = videoRef.current;
 
-    const playPromise = videoRef.current?.play();
-
-    if (!playPromise) {
-      setIsPlaying(true);
+    if (!video) {
       return;
     }
 
-    playPromise
-      .then(() => setIsPlaying(true))
-      .catch(() => {
-        setHasError(true);
-        setIsLoading(false);
-        setIsPlaying(false);
-      });
-  };
+    video.muted = true;
 
-  const pauseVideo = () => {
-    videoRef.current?.pause();
-    setIsPlaying(false);
-    setIsLoading(false);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // Autoplay can be blocked (for example Low Power Mode). Stay silent.
+          });
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    observer.observe(video);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleSound = () => {
+    const video = videoRef.current;
+    const nextMuted = !isMuted;
+
+    if (video) {
+      video.muted = nextMuted;
+    }
+
+    setIsMuted(nextMuted);
   };
 
   return (
@@ -79,17 +92,14 @@ export function TestimonialsSection() {
         <RevealBlock className="testimonial-video-card" delay={220}>
           <div className="video-frame">
             <video
-              muted={isMuted}
-              onEnded={() => {
-                setIsPlaying(false);
-                setIsLoading(false);
-              }}
+              muted
               onError={() => {
                 setHasError(true);
                 setIsLoading(false);
               }}
               onLoadedData={() => setIsLoading(false)}
               onPlaying={() => setIsLoading(false)}
+              onWaiting={() => setIsLoading(true)}
               playsInline
               preload="metadata"
               ref={videoRef}
@@ -99,11 +109,6 @@ export function TestimonialsSection() {
                 es: "Video de la Dra. Lina Roldán",
               })}
             />
-            {!isPlaying && !hasError && (
-              <button className="play-button" onClick={playVideo} type="button">
-                <span>{t({ en: "Play", es: "Reproducir" })}</span>
-              </button>
-            )}
             {isLoading && (
               <div className="video-state">
                 {t({ en: "Loading video", es: "Cargando video" })}
@@ -117,17 +122,40 @@ export function TestimonialsSection() {
                 })}
               </div>
             )}
-          </div>
-          <div className="video-controls">
-            <button onClick={isPlaying ? pauseVideo : playVideo} type="button">
-              {isPlaying
-                ? t({ en: "Pause", es: "Pausar" })
-                : t({ en: "Play", es: "Reproducir" })}
-            </button>
-            <button onClick={() => setIsMuted((current) => !current)} type="button">
-              {isMuted
-                ? t({ en: "Unmute", es: "Activar sonido" })
-                : t({ en: "Mute", es: "Silenciar" })}
+            <button
+              aria-label={
+                isMuted
+                  ? t({ en: "Unmute video", es: "Activar sonido del video" })
+                  : t({ en: "Mute video", es: "Silenciar video" })
+              }
+              aria-pressed={!isMuted}
+              className="sound-button"
+              onClick={toggleSound}
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                height="18"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                width="18"
+              >
+                <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" />
+                {isMuted ? (
+                  <path d="m22 9-6 6M16 9l6 6" />
+                ) : (
+                  <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+                )}
+              </svg>
+              <span>
+                {isMuted
+                  ? t({ en: "Unmute", es: "Activar sonido" })
+                  : t({ en: "Mute", es: "Silenciar" })}
+              </span>
             </button>
           </div>
         </RevealBlock>
@@ -154,7 +182,11 @@ export function TestimonialsSection() {
               ›
             </button>
           </div>
-          <Link className="text-link" href="#contact">
+          <Link
+            className="text-link"
+            href={bookingUrl}
+            rel="noopener noreferrer" target="_blank"
+          >
             {t({ en: "Start your consultation", es: "Iniciar tu consulta" })}
           </Link>
         </RevealBlock>

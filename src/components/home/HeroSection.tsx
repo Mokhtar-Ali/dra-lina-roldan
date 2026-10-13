@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { RevealBlock } from "@/components/shared/RevealBlock";
 import { RevealText } from "@/components/shared/RevealText";
+import { bookingUrl } from "@/data/links";
 import { media } from "@/data/media";
 import { useLanguage } from "@/providers/LanguageProvider";
 
@@ -52,7 +53,11 @@ export function HeroSection() {
           </RevealBlock>
 
           <RevealBlock className="hero-actions" delay={560}>
-            <Link className="button primary" href="#contact">
+            <Link
+              className="button primary"
+              href={bookingUrl}
+              rel="noopener noreferrer" target="_blank"
+            >
               {t({ en: "Book consultation", es: "Agendar consulta" })}
             </Link>
           </RevealBlock>

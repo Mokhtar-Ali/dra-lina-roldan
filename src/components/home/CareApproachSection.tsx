@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { RevealBlock } from "@/components/shared/RevealBlock";
 import { RevealText } from "@/components/shared/RevealText";
+import { bookingUrl } from "@/data/links";
 import { useLanguage } from "@/providers/LanguageProvider";
 
 const steps = [
@@ -82,7 +83,11 @@ export function CareApproachSection() {
               es: "Una experiencia clínica premium empieza con preguntas cuidadosas.",
             })}
           </p>
-          <Link className="button primary" href="#contact">
+          <Link
+            className="button primary"
+            href={bookingUrl}
+            rel="noopener noreferrer" target="_blank"
+          >
             {t({ en: "Begin thoughtfully", es: "Empezar con criterio" })}
           </Link>
         </RevealBlock>
